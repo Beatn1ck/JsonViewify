@@ -1,0 +1,20 @@
+﻿
+.jsonnodeview {
+	list-style: none;
+	margin: 0;
+	padding: 3px 0 3px 16px;
+	
+}
+
+.viewifyjsonnode {
+	background: url(images/toggle.jpg);
+	height: 16px;
+	width: 16px;
+	margin-left: -16px;
+	float: left;
+	cursor: pointer;
+}
+
+.expandablejsonnode {
+	background-position: 16px 0;
+}
