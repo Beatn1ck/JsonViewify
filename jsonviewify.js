@@ -53,7 +53,7 @@ function JsonViewifyInnerList(val) {
 		}
 		else if (!$.isEmptyObject(v)) {
 			if (typeof (v) == "string") {
-				li.appendChild(document.createTextNode(i + " : " + v));
+				li.appendChild(document.createTextNode(" : " + v));
 			} else {
 				li.appendChild(CreateExpandoDiv());
 				li.appendChild(WriteObject(v));
