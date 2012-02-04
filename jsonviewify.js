@@ -44,12 +44,20 @@ function JsonViewifyInnerList(val) {
 		var li = document.createElement("li");
 		li.appendChild(document.createTextNode(GenerateName(v, i)));
 		if ($.isArray(v)) {
-			li.appendChild(CreateExpandoDiv());
-			li.appendChild(JsonViewifyInnerList(v));
+			if (v.length == 2) {
+				li.appendChild(document.createTextNode(v[0] + " : " + v[1]));
+			} else {
+				li.appendChild(CreateExpandoDiv());
+				li.appendChild(JsonViewifyInnerList(v));
+			}
 		}
 		else if (!$.isEmptyObject(v)) {
-			li.appendChild(CreateExpandoDiv());
-			li.appendChild(WriteObject(v));
+			if (typeof (v) == "string") {
+				li.appendChild(document.createTextNode(i + " : " + v));
+			} else {
+				li.appendChild(CreateExpandoDiv());
+				li.appendChild(WriteObject(v));
+			}
 		}
 		ul.appendChild(li);
 	});
@@ -58,13 +66,15 @@ function JsonViewifyInnerList(val) {
 }
 
 function WriteObject(val) {
-
+	if (!val) return true;
 	var ul = jsonifyul.cloneNode(false);
 	if(collapsed){
 		ul.style.setProperty('display', 'none');
 	} else {
 		ul.style.setProperty('display', 'block');
 	}
+
+	
 
 	$.each(val, function (k, v) {
 		var li = document.createElement("li");
