@@ -3,23 +3,11 @@ var jsonifyul = document.createElement("ul");
 jsonifyul.setAttribute('class', 'jsonnodeview');
 var collapsed;
 
-function JsonViewifyHtml(iterator, params) {
-	if (iterator == null) {
-		alert("iterator is null");
-		return "";
-	}
-		
+function JsonViewifyHtml(json, params) {
+	if (json == null) { alert("json is null"); return ""; }
 	collapsed = !params ? true : params.collapsed != 'false';
-	var ul = jsonifyul.cloneNode(false);
-	$.each(iterator, function (i, val) {
-		var li = document.createElement("li");
-		li.appendChild(document.createTextNode(GenerateName(val,i)));
-		li.appendChild(CreateExpandoDiv());
-		li.appendChild(JsonViewifyInnerList(val));
-		ul.appendChild(li);
-	});
 
-	return ul;
+	return JsonViewifyInnerList(json);
 }
 
 function GenerateName(param, defaultname) {
@@ -73,8 +61,6 @@ function WriteObject(val) {
 	} else {
 		ul.style.setProperty('display', 'block');
 	}
-
-	
 
 	$.each(val, function (k, v) {
 		var li = document.createElement("li");
