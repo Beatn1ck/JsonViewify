@@ -6,8 +6,9 @@ var collapsed;
 function JsonViewifyHtml(json, params) {
 	if (json == null) { alert("json is null"); return ""; }
 	collapsed = !params ? true : params.collapsed != 'false';
+	var levels = (params && params.levels) ? params.levels : 1;
 
-	return JsonViewifyInnerList(json);
+	return JsonViewifyInnerList(json, levels+1);
 }
 
 function GenerateName(param, defaultname) {
@@ -17,11 +18,9 @@ function GenerateName(param, defaultname) {
 	return defaultname;
 }
 
-function JsonViewifyInnerList(val) {
-
-	//		var ul = document.createElement("ul");
+function JsonViewifyInnerList(val, level) {
 	var ul = jsonifyul.cloneNode(false);
-	if (collapsed) {
+	if (collapsed && level-- < 0) {
 		ul.style.setProperty('display', 'none');
 	} else {
 		ul.style.setProperty('display', 'block');
@@ -29,28 +28,26 @@ function JsonViewifyInnerList(val) {
 
 	$.each(val, function (i, v) {
 		if (!v) return true;
-		var li = document.createElement("li");
-		li.appendChild(document.createTextNode(GenerateName(v, i)));
-		if ($.isArray(v)) {
-			if (v.length == 2) {
-				li.appendChild(document.createTextNode(v[0] + " : " + v[1]));
-			} else {
-				li.appendChild(CreateExpandoDiv());
-				li.appendChild(JsonViewifyInnerList(v));
-			}
-		}
-		else if (!$.isEmptyObject(v)) {
-			if (typeof (v) == "string") {
-				li.appendChild(document.createTextNode(" : " + v));
-			} else {
-				li.appendChild(CreateExpandoDiv());
-				li.appendChild(WriteObject(v));
-			}
-		}
-		ul.appendChild(li);
+		
+		ul.appendChild(BuildListItem(i, v, level));
 	});
 
 	return ul;
+}
+
+var arrayTypes = ["object", "array"];
+function BuildListItem(k, v, level) {
+	var li = document.createElement("li");
+
+	if ($.inArray($.type(v), arrayTypes) >= 0) {
+		li.appendChild(document.createTextNode(GenerateName(v, k)));
+		li.appendChild(CreateExpandoDiv());
+		li.appendChild(JsonViewifyInnerList(v, level));
+	} else {
+		li.appendChild(document.createTextNode(k + " : " + v));
+	}
+
+	return li;
 }
 
 function WriteObject(val) {
